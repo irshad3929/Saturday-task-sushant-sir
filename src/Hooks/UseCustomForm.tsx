@@ -36,16 +36,12 @@ const useCustomForm = () => {
         if (validationRules.required && !value) {
           setErrors((prev) => ({
             ...prev,
-            [name]: `${name} field is required`,
           }));
         } else {
-          if (errors[name]) {
-            setErrors((prev) => {
-              const newErrors = { ...prev };
-              delete newErrors[name];
-              return newErrors;
-            });
-          }
+          setErrors((prev) => {
+            const { [name]: removedError, ...rest } = prev;
+            return rest;
+          });
         }
       },
       onBlur: () => {
@@ -62,17 +58,14 @@ const useCustomForm = () => {
   const handleSubmit = (onSubmit: (data: FormState) => void) => {
     return (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      let isValid = true;
       const newErrors: Errors = {};
+      let isValid = true;
 
       // Validate all fields on form submission
       for (const name in formState) {
-        if (formState.hasOwnProperty(name)) {
-          const value = formState[name];
-          if (value === "") {
-            newErrors[name] = `${name} field is required`;
-            isValid = false;
-          }
+        if (formState[name] === "") {
+          newErrors[name] = `${name} field is required`;
+          isValid = false;
         }
       }
 

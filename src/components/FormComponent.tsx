@@ -1,16 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import useCustomForm from "../Hooks/UseCustomForm";
 import "./FormComponent.css";
 
 const FormComponent: React.FC = () => {
   const { register, handleSubmit, errors } = useCustomForm();
+  const navigate = useNavigate();
 
   const onSubmit = (data: { [key: string]: string }) => {
-    console.log("Form submitted", data);
+    navigate("/form-data", { state: { formData: data } });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
+      <h2>Personal Details</h2>
       <div className="form-group">
         <label htmlFor="name">Name:</label>
         <input
